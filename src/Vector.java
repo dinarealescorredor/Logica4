@@ -19,15 +19,19 @@ public class Vector {
         // ACA INICIALIZO LOS METODOS
         setup();
         init_array();
-        //intercambiarPos();
-        intercambiar();
+        intercambiarPos();
+        inverter();
     }
 
     private void setup() {
         // manejo de errores
         String input = JOptionPane.showInputDialog("Ingrese el tamaño del vector:");
+        if(input == null){
+            JOptionPane.showMessageDialog(null, "Adios");
+            System.exit(0);
+        }
         try {
-            if(!input.isBlank()  && input.matches("-?[0-9]{0,10}")) {
+            if (validate(input)) {
                 this.tam = Integer.parseInt(input);
                 this.vectorX = new int[this.tam];
             } else {
@@ -48,20 +52,20 @@ public class Vector {
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,    // null para icono por defecto.
-                new Object[] { "Si", "No"},   // null para YES, NO y CANCEL
+                new Object[]{"Si", "No"},   // null para YES, NO y CANCEL
                 "Si");
 
-        if (seleccion  == 0) {
+        if (seleccion == 0) {
             for (int i = 0; i < this.vectorX.length; i++) {
-                String inputValue = JOptionPane.showInputDialog("Ingrese el valor de la posicion "+ i);
-                if(!inputValue.isBlank()  && inputValue.matches("-?\\d+")) {
-                    this.vectorX[i] =  Integer.parseInt(inputValue);
+                String inputValue = JOptionPane.showInputDialog("Ingrese el valor de la posicion " + i);
+                if (!inputValue.isBlank() && inputValue.matches("-?\\d+")) {
+                    this.vectorX[i] = Integer.parseInt(inputValue);
                 } else {
                     JOptionPane.showMessageDialog(null, "Ingrese un número valido");
-                    i =  i -1;
+                    i = i - 1;
                 }
 
-                if(i+1 < this.vectorX.length) {
+                if (i + 1 < this.vectorX.length) {
                     int options = JOptionPane.showOptionDialog(
                             null,
                             "¿Quiere llenar el vector?",
@@ -80,8 +84,8 @@ public class Vector {
                     }
                 }
             }
-            pintarVector();
-         } else if (seleccion == 1) {
+            pintarVector( "vector ::::");
+        } else if (seleccion == 1) {
             Random rnd = new Random();
             int hasta = 100;
             int desde = 0;
@@ -90,7 +94,7 @@ public class Vector {
                 int numAleatorio = rnd.nextInt(hasta - desde + 1) + desde;
                 this.vectorX[i] = numAleatorio;
             }
-            pintarVector();
+            pintarVector("vector :::");
         } else {
             JOptionPane.showMessageDialog(null, "Por favor seleccione si o no");
             this.init_array();
@@ -98,53 +102,50 @@ public class Vector {
     }
 
 
-    private void pintarVector() {
+    private void pintarVector (String msg ) {
+        System.out.println("\n");
+        System.out.println(msg);
         for (int i = 0; i < vectorX.length; i++) {
-            System.out.println("El vector de la posicion " + i + " tiene el valor de " + vectorX[i]);
+            int pos = i + 1;
+            System.out.println("El vector de la posicion " + pos + " tiene el valor de " + vectorX[i]);
         }
     }
 
-    private void intercambiar(){
-       // String m = JOptionPane.showInputDialog("Anyone there?");
-        //System.out.println(m);
+    private void intercambiarPos() {
+        String inputA = JOptionPane.showInputDialog("Ingrese el valor de la posición: A");
+        String inputB = JOptionPane.showInputDialog("Ingrese el valor de la posición: B");
 
+        if (validate(inputA) && validate(inputB)) {
+            int x = Integer.parseInt(inputA) - 1;
+            int y = Integer.parseInt(inputB) - 1;
+            int posFinal = this.vectorX.length;
 
-    }
-
-    private void intercambiarPos(){
-        int posFinal = vectorX.length + 1;
-        Scanner in = new Scanner(System.in);
-        System.out.println("Ingrese el numero de la posicion 1: ");
-        while (!in.hasNextInt()) {
-            System.out.println("Ingrese un número valido");
-            System.out.println("Ingrese el numero de la posicion 1: ");
-            in.nextLine();
-        }
-
-        Scanner in2 = new Scanner(System.in);
-        System.out.println("Ingrese el numero de la posicion 2: ");
-        while (!in2.hasNextInt()) {
-            System.out.println("Ingrese un número valido");
-            System.out.println("Ingrese el numero de la posicion 2: ");
-        }
-
-        int pos1 = in.nextInt();
-        int pos2 = in2.nextInt();
-        if ( pos1 <= posFinal && pos1>0 && pos2 <= posFinal && pos2>0){
-            System.out.println("estoy bien");
+            if (x < posFinal && y < posFinal) {
+                int dato;
+                dato = this.vectorX[x];
+                this.vectorX[x] = this.vectorX[y];
+                this.vectorX[y] = dato;
+            } else {
+                JOptionPane.showMessageDialog(null, "Ingrese un número entre  1 y  " + posFinal);
+                this.intercambiarPos();
+            }
         } else {
-            System.out.printf("Por favor ingrese un numero entre 1 y "+ posFinal);
-            in.nextLine();
+            JOptionPane.showMessageDialog(null, "Ingrese un número valido");
+            this.intercambiarPos();
         }
-
-
-
-
-       /* int dato;
-        dato = this.vectorX[x];
-        this.vectorX[x] =  this.vectorX[y];
-        this.vectorX[y] = dato;*/
+        pintarVector("Intercambiar Posiciones :::");
     }
 
+    private void inverter(){
+        for(int i=0; i<this.vectorX.length/2; i++){
+            int temp = vectorX[i];
+            vectorX[i] = vectorX[vectorX.length -i -1];
+            vectorX[vectorX.length -i -1] = temp;
+        }
+        pintarVector("Vector invertido :::");
+    }
 
+    private boolean validate(String input) {
+        return !input.isBlank() && input.matches("-?[0-9]{0,10}");
+    }
 }
