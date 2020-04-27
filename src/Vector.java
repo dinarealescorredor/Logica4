@@ -19,8 +19,9 @@ public class Vector {
         // ACA INICIALIZO LOS METODOS
         setup();
         init_array();
-        intercambiarPos();
-        inverter();
+        cambiarElemento();
+        //intercambiarPos();
+        //inverter();
     }
 
     private void setup() {
@@ -31,8 +32,12 @@ public class Vector {
             System.exit(0);
         }
         try {
-            if (validate(input)) {
+            if ( validate(input)) {
                 this.tam = Integer.parseInt(input);
+                if(this.tam == 0){
+                    JOptionPane.showMessageDialog(null, "Ingrese un numero mayor a cero");
+                    this.setup();
+                }
                 this.vectorX = new int[this.tam];
             } else {
                 JOptionPane.showMessageDialog(null, "Por favor ingrese un número valido entero");
@@ -111,6 +116,53 @@ public class Vector {
         }
     }
 
+    private void cambiarElemento(){
+        String position = JOptionPane.showInputDialog("Ingrese el valor de la posición que desea cambiar");
+        if (validate(position)) {
+            int pos = Integer.parseInt(position);
+            if( pos == 0 || pos > this.tam) {
+                JOptionPane.showMessageDialog(null,"La posición  supera el tamaño del vector");
+                this.cambiarElemento();
+            }
+
+            int valor =  this.vectorX[pos-1];
+            int options = JOptionPane.showOptionDialog(
+                    null,
+                    " En  la posición "+ pos + " existe el valor " + valor+" ¿Deseas cambiarlo?",
+                    "Logica",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,    // null para icono por defecto.
+                    new Object[]{"Si", "No"},   // null para YES, NO y CANCEL
+                    "Si"
+            );
+
+            if (options == 0){
+                String value = "";
+                do {
+                    value = JOptionPane.showInputDialog("Ingrese el nuevo número valido");
+                } while (!value.isBlank() && !value.matches("-?\\d+"));
+
+                    this.vectorX[pos-1] = Integer.parseInt(value);
+                    JOptionPane.showMessageDialog(null,"El nuevo valor de la posición "+ pos +" es "+value);
+            } else if(options == 1){
+                Random random = new Random();
+                int hasta = 100;
+                int desde = 0;
+
+                int numAleatorio = random.nextInt(hasta - desde + 1) + desde;
+                this.vectorX[pos-1] = numAleatorio;
+            }  else {
+                JOptionPane.showMessageDialog(null, "Por favor seleccione si o no");
+                this.cambiarElemento();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingrese un número valido");
+            this.cambiarElemento();
+        }
+        pintarVector("Intercambiar elemento :::");
+    }
+
     private void intercambiarPos() {
         String inputA = JOptionPane.showInputDialog("Ingrese el valor de la posición: A");
         String inputB = JOptionPane.showInputDialog("Ingrese el valor de la posición: B");
@@ -146,6 +198,6 @@ public class Vector {
     }
 
     private boolean validate(String input) {
-        return !input.isBlank() && input.matches("-?[0-9]{0,10}");
+        return !input.isBlank() && input.matches("^\\d+$");
     }
 }
