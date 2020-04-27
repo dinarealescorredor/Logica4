@@ -19,14 +19,14 @@ public class Vector {
         // ACA INICIALIZO LOS METODOS
         setup();
         init_array();
-        //cambiarElemento();
+        cambiarElemento();
         intercambiarPos();
-        //inverter();
+        inverter();
     }
 
     private void setup() {
         // manejo de errores
-        String input = JOptionPane.showInputDialog("Ingrese el tamaño del vector:");
+        String input = JOptionPane.showInputDialog(null, "Ingrese el tamaño del vector:", "inicio", JOptionPane.INFORMATION_MESSAGE);
         if (input == null) {
             JOptionPane.showMessageDialog(null, "Adios");
             System.exit(0);
@@ -62,7 +62,8 @@ public class Vector {
 
         if (seleccion == 0) {
             for (int i = 0; i < this.vectorX.length; i++) {
-                String inputValue = JOptionPane.showInputDialog("Ingrese el valor de la posicion " + i);
+                int position = i +1;
+                String inputValue = JOptionPane.showInputDialog("Ingrese el valor de la posicion " + position);
                 if (!inputValue.isBlank() && inputValue.matches("-?\\d+")) {
                     this.vectorX[i] = Integer.parseInt(inputValue);
                 } else {
@@ -108,16 +109,28 @@ public class Vector {
 
 
     private void pintarVector(String msg) {
-        System.out.println("\n");
-        System.out.println(msg);
-        for (int i = 0; i < vectorX.length; i++) {
-            int pos = i + 1;
-            System.out.println("El vector de la posicion " + pos + " tiene el valor de " + vectorX[i]);
+        if(this.tam <  20) {
+            String display = "";
+            for (int i = 0; i < this.vectorX.length; i++) {
+                display = display + " VectorX[" + (i + 1) + "] =" + this.vectorX[i] + "\n";
+            }
+            JOptionPane.showMessageDialog(null, display, msg, JOptionPane.INFORMATION_MESSAGE);
+        }  else {
+            System.out.println("\n");
+            System.out.println(msg);
+            for (int i = 0; i < vectorX.length; i++) {
+                int pos = i + 1;
+                System.out.println("El vector de la posicion " + pos + " tiene el valor de " + vectorX[i]);
+            }
         }
     }
 
     private void cambiarElemento() {
         String position = JOptionPane.showInputDialog("Ingrese el valor de la posición que desea cambiar");
+        if (position == null) {
+            JOptionPane.showMessageDialog(null, "Adios");
+            System.exit(0);
+        }
         if (validate(position)) {
             int pos = Integer.parseInt(position);
             if (pos == 0 || pos > this.tam) {
@@ -141,6 +154,10 @@ public class Vector {
                 String value = "";
                 do {
                     value = JOptionPane.showInputDialog("Ingrese el nuevo número valido");
+                    if (value == null) {
+                        JOptionPane.showMessageDialog(null, "Adios");
+                        System.exit(0);
+                    }
                 } while (!value.isBlank() && !value.matches("-?\\d+"));
 
                 this.vectorX[pos - 1] = Integer.parseInt(value);
