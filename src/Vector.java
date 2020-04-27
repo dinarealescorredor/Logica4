@@ -110,7 +110,7 @@ public class Vector {
 
     private void pintarVector(String msg) {
         if(this.tam <  20) {
-            String display = "";
+            String display = msg + "\n" + "";
             for (int i = 0; i < this.vectorX.length; i++) {
                 display = display + " VectorX[" + (i + 1) + "] =" + this.vectorX[i] + "\n";
             }
@@ -153,7 +153,7 @@ public class Vector {
             if (options == 0) {
                 String value = "";
                 do {
-                    value = JOptionPane.showInputDialog("Ingrese el nuevo número valido");
+                    value = JOptionPane.showInputDialog("Ingrese el nuevo número");
                     if (value == null) {
                         JOptionPane.showMessageDialog(null, "Adios");
                         System.exit(0);
